@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+</head>
+<body>
+    <a href="/ask/">ASK!</a>
+    <h1>Questions</h1>
+
+    <ul>
+    {% for post in posts %}
+        <li><a href="{{ question_url }}{{ post.id }}/">{{ post }}</a></li>
+    {% endfor %}
+    </ul>
+
+    {% for p in paginator.page_range %}
+        <a href="{{ paginator.baseurl }}{{ p }}">{{ p }}</a>
+    {% endfor %}
+</body>
+</html>

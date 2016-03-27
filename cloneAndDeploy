@@ -1,0 +1,9 @@
+git clone https://github.com/lukdut/StepicWebTech.git
+cd StepicWebTech
+mv web ../
+mv .git ../
+cd
+rm -rf StepicWebTech
+cd ~/web
+./init.sh
+

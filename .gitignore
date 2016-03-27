@@ -1,0 +1,4 @@
+.idea
+*.pyc
+ask/db.sqlite3
+test.py
