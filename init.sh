@@ -1,34 +1,22 @@
 #!/bin/bash
-curDir=$(pwd)
-homeEnv='/home/user/StepicWebTech/web'
-testEnv='/home/box/web'
+
+#!/usr/bin/env bash
+
+sudo rm /etc/nginx/sites-enabled/default
+
+sudo ln -sf /home/box/web/etc/nginx.conf  /etc/nginx/sites-enabled/test.conf
+sudo /etc/init.d/nginx restart
+
+sudo ln -s /home/box/web/etc/gunicorn.conf /etc/gunicorn.d/test
+sudo ln -s /home/box/web/etc/gunicorn_ask.conf /etc/gunicorn.d/ask
 
 
-if [ $curDir == $homeEnv ]; then
-        echo 'home env'
+sudo /etc/init.d/mysql restart
+#MySQL initial actions
+mysql -uroot -e"CREATE DATABASE stepic"
+mysql -uroot -e"CREATE USER 'admin'@'localhost' IDENTIFIED BY 'qwerty'"
+mysql -uroot -e"GRANT ALL ON stepic.* TO 'admin'@'localhost'"
 
-	sudo ln -s /home/user/StepicWebTech/web/etc/nginx.conf  /etc/nginx/sites-enabled/test.conf
-	sudo /etc/init.d/nginx restart
+sudo python /home/box/web/ask/manage.py syncdb
 
-	cd ask
-	sudo gunicorn -b 127.0.0.1:8000 ask.wsgi
-elif [ $curDir == $testEnv ]; then
-        echo 'test env'
-
-	./createDB.sh
-	
-	sudo ln -sf ~/web/etc/nginx.conf /etc/nginx/sites-enabled/test.conf
-	sudo rm -rf /etc/nginx/sites-enabled/default
-	sudo /etc/init.d/nginx restart
-
-	sudo ln -sf ~/web/etc/gunicorn.conf   /etc/gunicorn.d/test
-	sudo /etc/init.d/gunicorn restart
-
-	cd ~/web/ask/ask
-	gunicorn -b 127.0.0.1:8000 wsgi
-
-else
-        echo 'unknown env!'
-	exit
-fi
-
+sudo /etc/init.d/gunicorn restart
